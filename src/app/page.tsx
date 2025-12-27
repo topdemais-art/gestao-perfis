@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { getUserSession, canAccessRoute } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,7 +21,6 @@ interface Cliente {
 }
 
 export default function Home() {
-  const router = useRouter()
   const { toast } = useToast()
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,19 +33,8 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    const user = getUserSession()
-    if (!user) {
-      router.push('/login')
-      return
-    }
-
-    if (!canAccessRoute(user.perfil, '/vendas')) {
-      router.push('/login')
-      return
-    }
-
     loadClientes()
-  }, [router])
+  }, [])
 
   const loadClientes = async () => {
     try {
@@ -106,7 +92,6 @@ export default function Home() {
     try {
       setSubmitting(true)
       
-      // Dados que serão enviados
       const dadosParaEnviar = {
         nome: formData.nome,
         telefone: formData.telefone,
@@ -186,7 +171,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-100 lg:pl-64">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-100">
       <div className="p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
